@@ -1,16 +1,12 @@
-from abc import abstractproperty
+import University_DB as db
 from typing import Text
 import requests 
-import json
 from bs4 import BeautifulSoup as bs
-#DBS
-db_LETU = ['programmnaya-inzheneriya' , 'prikladnaya-matematika-i-informatika' 
-, 'informatika-i-vychislitelnaya-tehnika-kmip' , 'informacionnye-sistemy-i-tehnologii'
- , 'elektroenergetika-i-elektrotehnika' , 'upravlenie-v-tehnicheskih-sistemah-fea' ]
 
-#LINK
-line_LETU = "https://etu.ru/ru/abiturientam/priyom-na-1-y-kurs/podavshie-zayavlenie/ochnaya/byudzhet/"
-line_POLITECH = "https://enroll.spbstu.ru/ajax/interactive_detail?report_option=25f848f5-daa1-11eb-8040-0050569f980a&scenario=e816affc-5f19-11eb-803a-0050569f980a&scenarioN=Списки поступающих по программам бакалавриата/специалитета в 2021 году для граждан РФ&level_education=b7af2da3-5972-11eb-803a-0050569f980a&form_education=a5ae897b-5972-11eb-803a-0050569f980a&basis_admission=a5ae8977-5972-11eb-803a-0050569f980a|false&faculty=34e3382d-5ef2-11eb-803a-0050569f980a&direction=74d76527-9ed2-11eb-803c-0050569f980a&profile=00000000-0000-0000-0000-000000000000&actions=list_applicants"
+
+line_LETU = db.line_LETU
+db_LETU = db.db_LETU
+db_POLITECH = db.db_POLITECH
 
 #ЛЭТИ
 def html_parser_LETU(str):
@@ -55,20 +51,34 @@ def html_parser_POLITECH(str):
     return persons
 
 
+choosed_university = 1
+while choosed_university != 'End':
+    choosed_university = input()
 
-#OUTPUT LETU
-for j in range(0 , 6):
 
-    r = requests.get(line_LETU + db_LETU[j])
+    if choosed_university == "ЛЭТИ":
+        #OUTPUT LETU
+        for j in range(0 , 6):
 
-    persons = html_parser_LETU(r.text)
+            r = requests.get(line_LETU + db_LETU[j])
 
-    for i in range(len(persons)):
-        if persons[i]["snils"] == "190-785-069 02":
-            print(db_LETU[j] , persons[i])
-            break
+            persons = html_parser_LETU(r.text)
 
-r = requests.get(line_POLITECH)
+            for i in range(len(persons)):
+                if persons[i]["snils"] == "190-785-069 02":
+                    print(db_LETU[j] , persons[i])
+                    break
+    elif choosed_university == "ПОЛИТЕХ":
+        #OUTPUT POLITECH
+        for j in range(0 , 4):
 
-print(html_parser_POLITECH(r.json()))
+            r = requests.get(db_POLITECH[j][1])
+            
+            persons = html_parser_POLITECH(r.json())
+
+            for i in range(len(persons)):
+                if persons[i]["snils"] == "190-785-069 02":
+                    print(db_POLITECH[j][0] , persons[i])
+                    break
+
 
