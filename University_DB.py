@@ -2,7 +2,11 @@
 
 db_LETU = ['programmnaya-inzheneriya' , 'prikladnaya-matematika-i-informatika' 
 , 'informatika-i-vychislitelnaya-tehnika-kmip' , 'informacionnye-sistemy-i-tehnologii'
- , 'elektroenergetika-i-elektrotehnika' , 'upravlenie-v-tehnicheskih-sistemah-fea' ]
+ , 'elektroenergetika-i-elektrotehnika' , 'upravlenie-v-tehnicheskih-sistemah-fea' ,
+ 'radiotehnika-sistemy-kompyuternogo-zreniya' , 'radiotehnika' ,
+ 'infokommunikacionnye-tehnologii-i-sistemy-svyazi' , 'konstruirovanie-i-tehnologiya-elektronnyh-sredstv' ,
+ 'elektronika-i-nanoelektronika-oif' , 'priborostroenie' , 
+ 'informatika-i-vychislitelnaya-tehnika-ii' , 'biotehnicheskie-sistemy-i-tehnologii']
 
 #первая - пи , вторая - мехатроника и роботетхника, третья - Информационные системы и технологии
 # четвертая - Автоматизация технологических процессов и производств

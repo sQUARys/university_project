@@ -1,3 +1,4 @@
+from sys import implementation
 import University_DB as db
 from typing import Text
 import requests 
@@ -16,6 +17,7 @@ def html_parser_LETU(str):
     own_places = soup.find_all('td' , class_ = "number")
     all_snils = soup.find_all('td' , class_ = "fio")
     prioryties = soup.find_all('td' , class_ = "priority")
+    summa_ballov = soup.find_all('td' , class_ = "ball")
 
     persons = []
 
@@ -25,7 +27,8 @@ def html_parser_LETU(str):
             {
                 'place' : own_places[i].text,
                 'snils' : all_snils[i].text,
-                'priority' : prioryties[i].text
+                'priority' : prioryties[i].text,
+                'balls' : summa_ballov[i].text
             }
         )
     
@@ -51,7 +54,8 @@ def html_parser_POLITECH(str):
     return persons
 
 
-choosed_university = 1
+choosed_university = True
+
 while choosed_university != 'End':
     choosed_university = input()
 
@@ -68,6 +72,19 @@ while choosed_university != 'End':
                 if persons[i]["snils"] == "190-785-069 02":
                     print(db_LETU[j] , persons[i])
                     break
+
+        for i in range(7, len(db_LETU)):
+            r = requests.get(line_LETU + db_LETU[i])
+
+            persons = html_parser_LETU(r.text)
+
+            for j in range(len(persons)):
+                if persons[j]["balls"] == "273":
+                    print(db_LETU[i] , persons[j])
+                    break
+        print("That's all, what i can write you)")
+
+        
     elif choosed_university == "ПОЛИТЕХ":
         #OUTPUT POLITECH
         for j in range(0 , 4):
@@ -80,5 +97,6 @@ while choosed_university != 'End':
                 if persons[i]["snils"] == "190-785-069 02":
                     print(db_POLITECH[j][0] , persons[i])
                     break
+        print("That's all, what i can write you)")
 
 
