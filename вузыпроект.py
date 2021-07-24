@@ -1,3 +1,4 @@
+from json.decoder import JSONDecodeError
 from re import L
 from sys import implementation
 
@@ -63,27 +64,20 @@ def html_parser_POLITECH(str):
 def html_parser_ITMO(str):
     soup = bs(str , 'html.parser')
     
-    all_info =  soup.find_all('td' ,)
-
     persons = []
 
-    count = 0
-    person = []
-
+    all_info =  soup.find_all('tr')
+    
     for i in range(0 , len(all_info)):
-        if count < 14:
 
-            person.append(all_info[i].text)
-            count += 1
+        all_info[i] = all_info[i].find_all('td')
 
-        else:
+        for j in range(0 , len(all_info[i])):
+            all_info[i][j] = all_info[i][j].text
 
-            persons.append(person)
-            person = []
-            count = 0
+        persons.append(all_info[i])
 
     return persons
-
 
 
 choosed_university = True
@@ -150,26 +144,42 @@ while choosed_university != 'End':
 
     elif choosed_university == "ИТМО":
 
-        count = 0
         
-        for i in range(0 , 4):
+        # for i in range(0 , 4):
 
+        #     r = requests.get(line_ITMO + db_ITMO[i][1])
+
+        #     persons = html_parser_ITMO(r.text)
+
+        #     persons.pop(0)
+        #     persons.pop(0)
+
+        #     for j in range(0 , len(persons)):
+        #         if persons[j][2] == "Косенко Роман Дмитриевич":
+        #             print(db_ITMO[i][0] , persons[j])
+        #             break
+
+
+        count = 0
+
+        for i in range(4 , len(db_ITMO)):
             r = requests.get(line_ITMO + db_ITMO[i][1])
-            print(line_ITMO + db_ITMO[i][1])
+
             persons = html_parser_ITMO(r.text)
+
             persons.pop(0)
-            print(persons[i][2])
-            if persons[i][2] == "Косенко Роман Дмитриевич":
-                print(db_ITMO[i][0] , persons[i])
-                break
+            persons.pop(0)
 
-        # r = requests.get(line_ITMO + db_ITMO[0][1])
+            for j in range(0 , len(persons)):
+                if len(persons[j][0]) == 1:
+                    if persons[j][1] != '1' and persons[j][7] > '267' and persons[j][10] != 'Да' and persons[j][11] != 'Да':
+                        count += 1
+                    elif persons[j][7] <= '267' and persons[j][10] != 'Да' and persons[j][11] != 'Да':
+                        print(db_ITMO[i][0] , ", " ,"Моё место на эту специальность, НЕ СЧИТАЯ БВИ И ОСОБЫЕ:" , persons[j][1])
+                        break
 
-        # persons = html_parser_ITMO(r.text)
-        # for i in range(0 , len(persons)):
-        #     # pesons[1] - приоритет
-        #     if persons[i][1] != '1' and persons[i][7] !='273' and  persons[i][10] == 'Нет' and  persons[i][11] == 'Нет':
-        #         count += 1
-        #     elif persons[i][7] == '273':
-        #         print("Моё место на эту специальность, НЕ СЧИТАЯ БВИ И ОСОБЫХ:" , persons[i][0])
-        # print("Количество людей до меня, для которых данная специальность не в приоритете:" , count)
+            print( "Количество людей до меня, для которых данная специальность не в приоритете:" , count)
+            count = 0
+            print("")
+
+        print("That's all what i want to say")
