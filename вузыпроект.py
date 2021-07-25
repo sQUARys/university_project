@@ -144,25 +144,8 @@ while choosed_university != 'End':
 
     elif choosed_university == "ИТМО":
 
-        
-        # for i in range(0 , 4):
+        for i in range(0 , 4):
 
-        #     r = requests.get(line_ITMO + db_ITMO[i][1])
-
-        #     persons = html_parser_ITMO(r.text)
-
-        #     persons.pop(0)
-        #     persons.pop(0)
-
-        #     for j in range(0 , len(persons)):
-        #         if persons[j][2] == "Косенко Роман Дмитриевич":
-        #             print(db_ITMO[i][0] , persons[j])
-        #             break
-
-
-        count = 0
-
-        for i in range(4 , len(db_ITMO)):
             r = requests.get(line_ITMO + db_ITMO[i][1])
 
             persons = html_parser_ITMO(r.text)
@@ -171,15 +154,40 @@ while choosed_university != 'End':
             persons.pop(0)
 
             for j in range(0 , len(persons)):
-                if len(persons[j][0]) == 1:
-                    if persons[j][1] != '1' and persons[j][7] > '267' and persons[j][10] != 'Да' and persons[j][11] != 'Да':
+                if persons[j][2] == "Косенко Роман Дмитриевич":
+                    print(db_ITMO[i][0] , persons[j])
+                    break
+
+        for i in range(5 , len(db_ITMO)):
+
+            r = requests.get(line_ITMO + db_ITMO[i][1])
+
+            persons = html_parser_ITMO(r.text)
+
+            persons.pop(0)
+            persons.pop(0)
+            
+            count = 0
+            flag = False
+
+            for j in range(0 , len(persons)):
+                
+                if persons[j][0] == 'по общему конкурсу':
+                    flag = True
+                elif len(persons[j][0]) > 4:
+                    flag = False
+
+                if flag:
+                    if (persons[j][10] == 'Да' or persons[j][11] == 'Да') or persons[j][0] == 'по общему конкурсу':
+                        count += 0
+                    elif persons[j][1] != '1' and persons[j][7] != '' and int(persons[j][7]) > 267:
                         count += 1
-                    elif persons[j][7] <= '267' and persons[j][10] != 'Да' and persons[j][11] != 'Да':
-                        print(db_ITMO[i][0] , ", " ,"Моё место на эту специальность, НЕ СЧИТАЯ БВИ И ОСОБЫЕ:" , persons[j][1])
+                    elif persons[j][7] != '' and int(persons[j][7]) <= 267:
+                        print("Специальность:" , db_ITMO[i][0] , "Мое место:" , persons[j][0])
                         break
 
+
             print( "Количество людей до меня, для которых данная специальность не в приоритете:" , count)
-            count = 0
             print("")
 
         print("That's all what i want to say")
